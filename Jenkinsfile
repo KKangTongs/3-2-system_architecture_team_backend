@@ -48,20 +48,58 @@ pipeline {
             }
         }
 
-        // 추가 단계: 배포, 알림 등
-//         stage('Build and Deploy auth-service') {
-//             steps {
-//                 dir('auth-service') {
-//                     sh './gradlew clean build'
-//                     // Docker 이미지 빌드 및 푸시
-//                     sh 'docker build -t auth-service .'
-//                     sh 'docker push your-docker-registry/auth-service'
-//                     // 배포 스크립트 실행
-// //                     sh 'deploy-scripts/deploy-auth-service.sh'
-//                 }
-//             }
-//         }
 
+        stage('Build and Deploy eureka-server') {
+            steps {
+                dir('eureka-server') {
+                    sh './gradlew clean build'
+                    // Docker 이미지 빌드 및 푸시
+                    sh 'docker build -t ideawolf/eureka-server .'
+                    sh 'docker push ideawolf/eureka-server'
+                }
+            }
+        }
+
+        stage('Build and Deploy gateway') {
+            steps {
+                dir('gateway') {
+                    sh './gradlew clean build'
+                    // Docker 이미지 빌드 및 푸시
+                    sh 'docker build -t ideawolf/gateway .'
+                    sh 'docker push ideawolf/gateway'
+                }
+            }
+        }
+
+        stage('Build and Deploy funfact-service') {
+            steps {
+                dir('funfact-service') {
+                    sh './gradlew clean build'
+                    // Docker 이미지 빌드 및 푸시
+                    sh 'docker build -t ideawolf/funfact-service .'
+                    sh 'docker push ideawolf/funfact-service'
+                }
+            }
+        }
+
+        stage('Build and Deploy auth-service') {
+            steps {
+                dir('auth-service') {
+                    sh './gradlew clean build'
+                    // Docker 이미지 빌드 및 푸시
+                    sh 'docker build -t ideawolf/auth-service .'
+                    sh 'docker push ideawolf/auth-service'
+                }
+            }
+        }
+
+        stage('Deploy All Services') {
+            steps {
+                script {
+                    sh 'deploy.sh'
+                }
+            }
+        }
 
     }
 

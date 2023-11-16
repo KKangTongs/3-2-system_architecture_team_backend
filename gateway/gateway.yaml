@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  replicas: 3  # 원하는 파드 복제본 수를 설정합니다.
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: ideawolf/gateway:latest  # Docker 이미지 이름을 지정합니다.
+          ports:
+            - containerPort: 8000  # 컨테이너가 수신 대기할 포트 번호를 지정합니다.
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: gateway
+  ports:
+    - protocol: TCP
+      port: 80  # 서비스가 노출할 포트 번호를 지정합니다.
+      targetPort: 8000  # 서비스가 파드로 트래픽을 전달할 포트 번호를 지정합니다.

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-server
+spec:
+  replicas: 1  # Eureka 서버는 하나만 필요할 수 있습니다.
+  selector:
+    matchLabels:
+      app: eureka-server
+  template:
+    metadata:
+      labels:
+        app: eureka-server
+    spec:
+      containers:
+        - name: eureka-server
+          image: ideawolf/eureka-server:latest  # Docker 이미지 이름을 지정합니다.
+          ports:
+            - containerPort: 8761  # Eureka 서버의 기본 포트
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-server
+spec:
+  selector:
+    app: eureka-server
+  ports:
+    - protocol: TCP
+      port: 8761  # 서비스가 노출할 포트 번호를 지정합니다.
+      targetPort: 8761  # 서비스가 파드로 트래픽을 전달할 포트 번호를 지정합니다.
