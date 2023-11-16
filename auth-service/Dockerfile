@@ -8,4 +8,4 @@ WORKDIR /app
 COPY build/libs/auth-service-0.0.1-SNAPSHOT.jar /app/auth-service.jar
 
 # JAR 파일을 실행합니다.
-CMD ["java", "-jar", "auth-service.jar"]
+CMD ["java", "-jar", "-Dserver.port=8001", "gateway.jar"]
