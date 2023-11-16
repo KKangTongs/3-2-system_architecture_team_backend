@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-//         // 추가 단계: 배포, 알림 등
+        // 추가 단계: 배포, 알림 등
 //         stage('Build and Deploy auth-service') {
 //             steps {
 //                 dir('auth-service') {
@@ -57,7 +57,7 @@ pipeline {
 //                     sh 'docker build -t auth-service .'
 //                     sh 'docker push your-docker-registry/auth-service'
 //                     // 배포 스크립트 실행
-//                     sh 'deploy-scripts/deploy-auth-service.sh'
+// //                     sh 'deploy-scripts/deploy-auth-service.sh'
 //                 }
 //             }
 //         }
@@ -67,7 +67,9 @@ pipeline {
 
     post {
         always {
-            // 로그 수집, 결과 알림 보내기 등
+            // 항상 실행할 단계 예시
+            echo '빌드 프로세스가 완료되었습니다.'
+            // 여기에 추가적인 로그 수집, 알림 전송 등의 단계를 포함할 수 있습니다.
         }
     }
 }
