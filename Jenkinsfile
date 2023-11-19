@@ -12,9 +12,10 @@ pipeline {
             steps {
                 dir('eureka-server') {
                     sh './gradlew clean build'
-                    // Docker 이미지 빌드 및 푸시
-                    sh 'docker build -t ideawolf/eureka-server .'
-//                     sh 'docker push ideawolf/eureka-server'
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def eurekaImage = docker.build('ideawolf/eureka-server')
+                        eurekaImage.push()
+                    }
                 }
             }
         }
@@ -23,9 +24,10 @@ pipeline {
             steps {
                 dir('gateway') {
                     sh './gradlew clean build'
-                    // Docker 이미지 빌드 및 푸시
-                    sh 'docker build -t ideawolf/gateway .'
-//                     sh 'docker push ideawolf/gateway'
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def gatewayImage = docker.build('ideawolf/gateway')
+                        gatewayImage.push()
+                    }
                 }
             }
         }
@@ -34,9 +36,10 @@ pipeline {
             steps {
                 dir('funfact-service') {
                     sh './gradlew clean build'
-                    // Docker 이미지 빌드 및 푸시
-                    sh 'docker build -t ideawolf/funfact-service .'
-//                     sh 'docker push ideawolf/funfact-service'
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def funfactServiceImage = docker.build('ideawolf/funfact-service')
+                        funfactServiceImage.push()
+                    }
                 }
             }
         }
@@ -45,44 +48,27 @@ pipeline {
             steps {
                 dir('auth-service') {
                     sh './gradlew clean build'
-                    // Docker 이미지 빌드 및 푸시
-                    sh 'docker build -t ideawolf/auth-service .'
-//                     sh 'docker push ideawolf/auth-service'
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def authServiceImage = docker.build('ideawolf/auth-service')
+                        authServiceImage.push()
+                    }
                 }
             }
         }
 
-    
-        stage('Deploy Eureka Server') {
+        stage('Deploy All Services') {
             steps {
-                sh 'docker run -d -p 8761:8761 --name eureka-server --network msa-network ideawolf/eureka-server'
+                script {
+                    sh 'deploy.sh'
+                }
             }
         }
 
-        stage('Deploy auth-service') {
-            steps {
-                sh 'docker run -d -p 8001:8001 --name auth-service --network msa-network ideawolf/auth-service'
-            }
-        }
-
-        stage('Deploy funfact-service') {
-            steps {
-                sh 'docker run -d -p 8002:8002 --name funfact-service --network msa-network ideawolf/funfact-service'
-            }
-        }
-
-        stage('Deploy gateway') {
-            steps {
-                sh 'docker run -d -p 8000:8000 --name gateway --network msa-network ideawolf/gateway'
-            }
-        }
     }
 
     post {
         always {
-            // 항상 실행할 단계 예시
             echo '빌드 프로세스가 완료되었습니다.'
-            // 여기에 추가적인 로그 수집, 알림 전송 등의 단계를 포함할 수 있습니다.
         }
     }
 }
