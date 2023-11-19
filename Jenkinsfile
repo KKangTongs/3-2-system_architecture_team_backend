@@ -55,7 +55,7 @@ pipeline {
         stage('Deploy All Services') {
             steps {
                 script {
-                    sh 'deploy.sh'
+                    sh './deploy.sh'
                 }
             }
         }
