@@ -1,3 +1,5 @@
+ENV SPRING_PROFILES_ACTIVE=docker
+
 # 기본 이미지를 사용합니다.
 FROM openjdk:17-jdk-slim
 

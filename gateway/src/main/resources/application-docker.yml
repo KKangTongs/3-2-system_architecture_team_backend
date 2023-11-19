@@ -1,0 +1,24 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: authservice
+          uri: http://auth-service:8001/
+          predicates:
+            - Path=/api/auth/**
+        - id: funfactservice
+          uri: http://funfact-service:8002/
+          predicates:
+            - Path=/api/funfact/**, /api/comment/**
