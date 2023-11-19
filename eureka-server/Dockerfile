@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # 로컬 머신에서 빌드한 Eureka 서비스 JAR 파일을 컨테이너 내로 복사합니다.
-COPY build/libs/eureka-service-0.0.1-SNAPSHOT.jar /app/eureka-service.jar
+COPY build/libs/eureka-server-0.0.1-SNAPSHOT.jar /app/eureka-server.jar
 
 # Eureka 서비스 애플리케이션을 실행합니다.
-CMD ["java", "-jar", "-Dserver.port=8761", "eureka-service.jar"]
+CMD ["java", "-jar", "-Dserver.port=8761", "eureka-server.jar"]
