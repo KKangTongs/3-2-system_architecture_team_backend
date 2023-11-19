@@ -14,7 +14,7 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/eureka-server .'
-                    sh 'docker push ideawolf/eureka-server'
+//                     sh 'docker push ideawolf/eureka-server'
                 }
             }
         }
@@ -25,7 +25,7 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/gateway .'
-                    sh 'docker push ideawolf/gateway'
+//                     sh 'docker push ideawolf/gateway'
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/funfact-service .'
-                    sh 'docker push ideawolf/funfact-service'
+//                     sh 'docker push ideawolf/funfact-service'
                 }
             }
         }
@@ -47,7 +47,7 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/auth-service .'
-                    sh 'docker push ideawolf/auth-service'
+//                     sh 'docker push ideawolf/auth-service'
                 }
             }
         }
