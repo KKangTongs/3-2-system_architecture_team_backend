@@ -8,13 +8,30 @@ pipeline {
             }
         }
 
+        stage('Stop and Remove All Containers') {
+            steps {
+                script {
+                    try {
+                        // 모든 컨테이너 중지
+                        sh 'docker stop $(docker ps -a -q)'
+                    } catch (Exception ex) {
+                    }
+                    try {
+                        // 모든 컨테이너 제거
+                        sh 'docker rm $(docker ps -a -q)'
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+        }
+
         stage('Build and Deploy eureka-server') {
             steps {
                 dir('eureka-server') {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/eureka-server .'
-//                     sh 'docker push ideawolf/eureka-server'
+                    sh 'docker run -d -p 8761:8761 --name eureka-server --network msa-network ideawolf/eureka-server'
                 }
             }
         }
@@ -25,7 +42,7 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/gateway .'
-//                     sh 'docker push ideawolf/gateway'
+                    sh 'docker run -d -p 8000:8000 --name gateway --network msa-network ideawolf/gateway'
                 }
             }
         }
@@ -36,7 +53,7 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/funfact-service .'
-//                     sh 'docker push ideawolf/funfact-service'
+                    sh 'docker run -d -p 8002:8002 --name funfact-service --network msa-network ideawolf/funfact-service'
                 }
             }
         }
@@ -47,43 +64,8 @@ pipeline {
                     sh './gradlew clean build'
                     // Docker 이미지 빌드 및 푸시
                     sh 'docker build -t ideawolf/auth-service .'
-//                     sh 'docker push ideawolf/auth-service'
+                    sh 'docker run -d -p 8001:8001 --name auth-service --network msa-network ideawolf/auth-service'
                 }
-            }
-        }
-
-
-        stage('Deploy All Services') {
-            steps {
-                script {
-                    sh './deploy.sh'
-                }
-            }
-        }
-
-
-
-        stage('Deploy Eureka Server') {
-            steps {
-                sh 'docker run -d -p 8761:8761 --name eureka-server --network msa-network ideawolf/eureka-server'
-            }
-        }
-
-        stage('Deploy auth-service') {
-            steps {
-                sh 'docker run -d -p 8001:8001 --name auth-service --network msa-network ideawolf/auth-service'
-            }
-        }
-
-        stage('Deploy funfact-service') {
-            steps {
-                sh 'docker run -d -p 8002:8002 --name funfact-service --network msa-network ideawolf/funfact-service'
-            }
-        }
-
-        stage('Deploy gateway') {
-            steps {
-                sh 'docker run -d -p 8000:8000 --name gateway --network msa-network ideawolf/gateway'
             }
         }
     }
