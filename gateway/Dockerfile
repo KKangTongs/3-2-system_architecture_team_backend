@@ -1,7 +1,7 @@
-ENV SPRING_PROFILES_ACTIVE=docker
-
 # 기본 이미지를 사용합니다.
 FROM openjdk:17-jdk-slim
+
+ENV SPRING_PROFILES_ACTIVE=docker
 
 # 컨테이너 내에서 애플리케이션을 실행할 작업 디렉토리를 설정합니다.
 WORKDIR /app
