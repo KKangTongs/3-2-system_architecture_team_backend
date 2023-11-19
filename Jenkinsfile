@@ -55,6 +55,7 @@ pipeline {
         stage('Deploy All Services') {
             steps {
                 script {
+                    sh 'chmod +x -R ${env.WORKSPACE}'
                     sh './deploy.sh'
                 }
             }
