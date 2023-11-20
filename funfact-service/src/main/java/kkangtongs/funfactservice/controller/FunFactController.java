@@ -41,7 +41,7 @@ public class FunFactController {
     }
 
     // Get subscription by user ID
-    
+
     @GetMapping("/subscriptions/{userId}")
     public ResponseEntity<?> getSubscriptions(@PathVariable Long userId) {
         return subscriptionService.getSubscriptionByUserId(userId)

@@ -21,4 +21,4 @@ spring:
         - id: funfactservice
           uri: http://funfact-service:8002/
           predicates:
-            - Path=/api/funfact/**, /api/comment/**
+            - Path=/api/funfacts/**, /api/comment/**
