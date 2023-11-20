@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/funfacts")
@@ -49,13 +50,30 @@ public class FunFactController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Unsubscribe from a topic
+    // Unsubscribe from a topqw2q1  q2W2QAic
     @PostMapping("/unsubscribe")
     public ResponseEntity<?> unsubscribe(@RequestBody SubscriptionRequest request) {
         Long userId = request.getUserId();
         String topic = request.getTopic();
         subscriptionService.unsubscribe(userId, topic);
         return ResponseEntity.ok().build();
+    }
+
+
+    @PostMapping("/generate/{topic}")
+    public Map<String, String> generateTextByTopic(@PathVariable String topic) {
+        return funFactService.generateTextByTopic(topic);
+    }
+
+
+    @GetMapping("/get_fact/{topic}")
+    public Map<String, List<Map<String, String>>> getFactByTopic(@PathVariable String topic) {
+        return funFactService.getFactByTopic(topic);
+    }
+
+    @GetMapping("/get_random_fact/{topic}")
+    public String getRandomFactByTopic(@PathVariable String topic) {
+        return funFactService.getRandomFactByTopic(topic);
     }
 
 }
