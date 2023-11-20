@@ -24,11 +24,11 @@ kind: Service
 metadata:
   name: gateway
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: gateway
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8000
-      # nodePort: 30007 # 선택적으로 지정할 수 있습니다.
+      
