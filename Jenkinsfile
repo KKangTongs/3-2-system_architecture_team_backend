@@ -8,7 +8,7 @@ pipeline {
             }
         }
 
-        stage('Stop and Remove All Containers') {
+        stage('Preparing Deploy') {
             steps {
                 script {
                     try {

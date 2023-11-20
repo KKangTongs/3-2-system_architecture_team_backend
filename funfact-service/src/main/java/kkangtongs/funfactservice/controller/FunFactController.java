@@ -1,8 +1,11 @@
 package kkangtongs.funfactservice.controller;
 
 
+import kkangtongs.funfactservice.DTO.SubscriptionRequest;
 import kkangtongs.funfactservice.domain.FunFact;
+import kkangtongs.funfactservice.domain.Subscription;
 import kkangtongs.funfactservice.service.FunFactService;
+import kkangtongs.funfactservice.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,43 +18,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/funfacts")
+@RequestMapping("/api/funfacts")
 public class FunFactController {
 
     private final FunFactService funFactService;
+    private final SubscriptionService subscriptionService;
+
 
     @Autowired
-    public FunFactController(FunFactService funFactService) {
+    public FunFactController(FunFactService funFactService, SubscriptionService subscriptionService) {
         this.funFactService = funFactService;
+        this.subscriptionService = subscriptionService;
     }
 
-    // 모든 흥미로운 사실을 조회
-    @GetMapping
-    public List<FunFact> getAllFunFacts() {
-        return funFactService.getAllFunFacts();
+    // Subscribe to a topic
+    @PostMapping("/subscribe")
+    public ResponseEntity<?> subscribe(@RequestBody SubscriptionRequest request) {
+        Long userId = request.getUserId();
+        String topic = request.getTopic();
+        Subscription subscription = subscriptionService.subscribe(userId, topic);
+        return ResponseEntity.ok(subscription);
     }
 
-    // 새로운 흥미로운 사실을 추가
-    @PostMapping
-    public FunFact addFunFact(@RequestBody FunFact funFact) {
-        return funFactService.addFunFact(funFact);
+    // Get subscription by user ID
+    @GetMapping("/subscriptions/{userId}")
+    public ResponseEntity<?> getSubscriptions(@PathVariable Long userId) {
+        return subscriptionService.getSubscriptionByUserId(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // 특정 흥미로운 사실을 조회
-    @GetMapping("/{id}")
-    public FunFact getFunFactById(@PathVariable Long id) {
-        return funFactService.getFunFactById(id);
+    // Unsubscribe from a topic
+    @DeleteMapping("/unsubscribe")
+    public ResponseEntity<?> unsubscribe(@RequestBody SubscriptionRequest request) {
+        Long userId = request.getUserId();
+        String topic = request.getTopic();
+        subscriptionService.unsubscribe(userId, topic);
+        return ResponseEntity.ok().build();
     }
 
-    // 흥미로운 사실 업데이트
-    @PutMapping("/{id}")
-    public FunFact updateFunFact(@PathVariable Long id, @RequestBody FunFact funFact) {
-        return funFactService.updateFunFact(id, funFact);
-    }
-
-    // 흥미로운 사실 삭제
-    @DeleteMapping("/{id}")
-    public void deleteFunFact(@PathVariable Long id) {
-        funFactService.deleteFunFact(id);
-    }
 }
