@@ -50,7 +50,7 @@ public class FunFactController {
     }
 
     // Unsubscribe from a topic
-    @DeleteMapping("/unsubscribe")
+    @PostMapping("/unsubscribe")
     public ResponseEntity<?> unsubscribe(@RequestBody SubscriptionRequest request) {
         Long userId = request.getUserId();
         String topic = request.getTopic();
